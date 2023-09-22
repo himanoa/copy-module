@@ -1,29 +1,20 @@
 import ts from "typescript"
 import { DependencyLeaf } from "./dependency-leaf"
 
-export const analyseDependency = (sourceFile: ts.SourceFile, filePath: string, program: ts.Program): {
-  deps: DependencyLeaf[][],
-  visitedFileCounts: Map<string, number>
-} => {
-  const deps: DependencyLeaf[][] = []
-  const visitedFileCounts = new Map<string, number>()
-  deps.push(traverseSourceFile(sourceFile, filePath, program, visitedFileCounts))
-  return {
-    deps,
-    visitedFileCounts
-  }
+export const analyseDependency = (sourceFile: ts.SourceFile, filePath: string, program: ts.Program): DependencyLeaf[][] => {
+  const results: DependencyLeaf[][] = []
+  results.push(traverseSourceFile(sourceFile, filePath, program))
+  return results
 }
 
 export const traverseSourceFile = (
   sourceFile:  ts.SourceFile,
   filePath: string,
-  program: ts.Program,
-  visitedFileCounts: Map<string, number>
+  program: ts.Program
 ): DependencyLeaf[] => {
   const results: DependencyLeaf[] = []
-  visitedFileCounts.set(filePath, (visitedFileCounts.get(filePath) ?? 0) + 1)
   sourceFile.forEachChild((node) => {
-    const deps = traverseNode(filePath, program, visitedFileCounts)(node)
+    const deps = traverseNode(filePath, program)(node)
     if(deps != null) {
       results.push(deps)
     }
@@ -32,7 +23,7 @@ export const traverseSourceFile = (
   return results
 }
 
-export const traverseNode = (filePath: string, program: ts.Program, visitedFileCounts: Map<string, number>) => (node: ts.Node): DependencyLeaf | null=> {
+export const traverseNode = (filePath: string, program: ts.Program) => (node: ts.Node): DependencyLeaf | null=> {
   switch(node.kind) {
     case ts.SyntaxKind.ImportDeclaration: {
       const importDeclaration = node as ts.ImportDeclaration
@@ -49,17 +40,9 @@ export const traverseNode = (filePath: string, program: ts.Program, visitedFileC
       if(sourceFile == null) {
         return null
       }
-      const visitedCount = visitedFileCounts.get(fileName) ?? 0
-      if(visitedCount > 0) {
-        visitedFileCounts.set(fileName, visitedCount + 1)
-        return {
-          filePath: fileName,
-          deps: []
-        }
-      }
       return {
         filePath: fileName ?? '',
-        deps: traverseSourceFile(sourceFile, fileName, program, visitedFileCounts)
+        deps: traverseSourceFile(sourceFile, fileName, program)
       }
     }
   }
