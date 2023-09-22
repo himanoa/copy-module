@@ -20,9 +20,9 @@ export const inspectDependency = (filePath: string) => {
     console.error("Error reading source file")
     process.exit(1)
   }
-  const dependencyTree = analyseDependency(sourceFile, filePath, program)
-  for(const deps of dependencyTree) {
+  const { deps } = analyseDependency(sourceFile, filePath, program)
+  for(const dep of deps) {
     console.log(`${filePath}`)
-    printDependencies(deps)
+    printDependencies(dep)
   }
 }
