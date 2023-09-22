@@ -36,8 +36,8 @@ const withBreadclumb = (breadclumb: Set<string>, fileName: string, op: (fileName
     }
     breadclumb.add(fileName)
     return op(fileName)
-  } catch(e) {
-    console.error(e)
+  } catch(e: any) {
+    console.error(e.message)
     return {
       filePath: fileName,
       deps: []

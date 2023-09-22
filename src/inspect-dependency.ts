@@ -22,6 +22,7 @@ export const inspectDependency = (filePath: string) => {
   }
   const dependencyTree = analyseDependency(sourceFile, filePath, program)
   for(const deps of dependencyTree) {
+    console.log("")
     console.log(`${filePath}`)
     printDependencies(deps)
   }
