@@ -1,9 +1,10 @@
 import yargs from "yargs"
 
-const args = yargs.option('dry-run', {
-  alias: 'd',
-  type: 'boolean',
-  description: 'Run the script without making any changes',
+const args = yargs.option('inspect-dependency [entry-point]', {
+  alias: 'i',
+  type: 'string',
+  description: 'Inspect dependency',
 }).parseSync()
 
-console.dir(args)
+const main = async () => {
+}
