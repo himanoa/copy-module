@@ -1,15 +1,10 @@
 import ts from "typescript"
 import { DependencyLeaf } from "./dependency-leaf"
-import { printDependencies } from "./printer"
 
-export const analyseDependency = (sourceFile: ts.SourceFile, filePath: string, program: ts.Program) => {
+export const analyseDependency = (sourceFile: ts.SourceFile, filePath: string, program: ts.Program): DependencyLeaf[][] => {
   const results: DependencyLeaf[][] = []
   results.push(traverseSourceFile(sourceFile, filePath, program))
-
-  for(const result of results) {
-    console.log(`${filePath}`)
-    printDependencies(result, 1)
-  }
+  return results
 }
 
 export const traverseSourceFile = (

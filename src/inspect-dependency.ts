@@ -2,6 +2,7 @@ import path from "path"
 import ts from "typescript"
 import { readFileSync } from "fs"
 import { analyseDependency } from "./analyse-dependency"
+import { printDependencies } from "./printer"
 
 export const inspectDependency = (filePath: string) => {
   const tsconfigPath = path.join(process.cwd(), 'tsconfig.json')
@@ -19,5 +20,9 @@ export const inspectDependency = (filePath: string) => {
     console.error("Error reading source file")
     process.exit(1)
   }
-  analyseDependency(sourceFile, filePath, program)
+  const dependencyTree = analyseDependency(sourceFile, filePath, program)
+  for(const deps of dependencyTree) {
+    console.log(`${filePath}`)
+    printDependencies(deps)
+  }
 }
