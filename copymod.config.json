@@ -1,0 +1,6 @@
+{
+  "rules": [
+    { "match": "src/(.*).ts", "to": "module/$1.ts" }
+  ],
+  "ignorePatterns": []
+}
