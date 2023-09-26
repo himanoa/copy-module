@@ -1,6 +1,6 @@
 {
   "rules": [
-    { "from": "src/(.+).ts", "to": "module/$1.ts" }
+    { "from": "src/index.ts", "to": "module/index.ts" }
   ],
   "ignorePatterns": []
 }

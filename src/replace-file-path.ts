@@ -26,7 +26,9 @@ export const replaceFilePathCommand = (filePath: string) => {
   }
   const dependencyTree = analyseDependency(sourceFile, filePath, program)
 
-  Promise.all(Array.from(makeIter(dependencyTree)).map(({ filePath }) => copyModuleFromRules(config.rules, filePath)))
+  Promise.all(
+    Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath))
+  )
 }
 
 export const copyModuleFromRules = async (rules: ReadonlyArray<CopyRule>, source: string): Promise<void> => {
@@ -39,4 +41,5 @@ export const copyModuleFromRules = async (rules: ReadonlyArray<CopyRule>, source
     await fs.copyFile(source, destinationPath)
     return
   }
+  console.error(`${source} is not matched with any rules.`)
 }
