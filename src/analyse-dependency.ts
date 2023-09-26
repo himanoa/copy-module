@@ -1,8 +1,9 @@
 import ts from "typescript"
 import { DependencyLeaf } from "./dependency-leaf"
+import { DependencyTree } from "./dependency-tree"
 
-export const analyseDependency = (sourceFile: ts.SourceFile, filePath: string, program: ts.Program): DependencyLeaf[][] => {
-  const results: DependencyLeaf[][] = []
+export const analyseDependency = (sourceFile: ts.SourceFile, filePath: string, program: ts.Program): DependencyTree => {
+  const results: DependencyTree = []
   results.push(traverseSourceFile(sourceFile, filePath, program))
   return results
 }
