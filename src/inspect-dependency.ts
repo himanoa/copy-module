@@ -20,7 +20,7 @@ export const inspectDependency = (filePath: string, verbose: boolean) => {
     console.error("Error reading source file")
     process.exit(1)
   }
-  const dependencyTree = analyseDependency(sourceFile, filePath, program)
+  const dependencyTree = analyseDependency(sourceFile, filePath, program, verbose)
   if(verbose) {
     console.log("## Source file")
     console.log(JSON.stringify(program, null, 2))

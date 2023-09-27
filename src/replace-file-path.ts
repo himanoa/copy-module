@@ -24,7 +24,7 @@ export const replaceFilePathCommand = (filePath: string, dryRun: boolean) => {
     console.error("Error reading source file")
     process.exit(1)
   }
-  const dependencyTree = analyseDependency(sourceFile, filePath, program)
+  const dependencyTree = analyseDependency(sourceFile, filePath, program, false)
 
   Promise.all(
     Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath, dryRun))
