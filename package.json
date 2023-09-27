@@ -9,19 +9,24 @@
   "scripts": {
     "test": "vitest",
     "start": "ts-node src/cli.ts",
-    "build": "tsc  -p tsconfig.json"
+    "build": "rollup --config rollup.config.mjs",
+    "check": "tsc  -p tsconfig.json --noEmit"
   },
   "author": "himanoa <matsunoappy@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@rollup/plugin-typescript": "11.1.4",
     "@types/node": "^20.6.3",
     "@types/typescript": "^2.0.0",
     "@types/yargs": "^17.0.24",
+    "rollup": "3.29.3",
+    "rollup-plugin-add-shebang": "0.3.1",
     "ts-node": "^10.9.1",
+    "tslib": "2.6.2",
     "vitest": "0.34.5"
   },
   "dependencies": {
-    "yargs": "^17.7.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "yargs": "^17.7.2"
   }
 }
