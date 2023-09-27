@@ -1,11 +1,11 @@
 {
   "name": "copy-module",
   "version": "1.0.0",
-  "description": "copy base import",
-  "main": "index.js",
+  "description": "Copy files by recursively traversing the import path",
+  "main": "dist/cli.js",
   "scripts": {
     "test": "vitest",
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/cli.ts"
   },
   "author": "himanoa <matsunoappy@gmail.com>",
   "license": "MIT",
@@ -14,11 +14,11 @@
     "@types/typescript": "^2.0.0",
     "@types/yargs": "^17.0.24",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2",
     "vitest": "0.34.5"
   },
   "dependencies": {
     "ts-pattern": "^5.0.5",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "typescript": "^5.2.2"
   }
 }
