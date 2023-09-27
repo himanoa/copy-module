@@ -22,7 +22,7 @@ const args = yargs(hideBin(process.argv))
       description: 'Enable dry run mode'
     })
   })
-  .command('initConfig', 'Initialize config')
+  .command('init-config', 'Initialize config')
   .parseSync()
 
 const main = async () => {
@@ -39,7 +39,7 @@ const main = async () => {
       }
       break
     }
-    case 'initConfig': {
+    case 'init-config': {
       initConfig()
       break
     }
