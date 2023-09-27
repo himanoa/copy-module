@@ -33,7 +33,7 @@ const main = async () => {
   switch(args._[0]) {
     case 'inspect':{
       if(typeof args._[1] === 'string') {
-        inspectDependency(args._[1] as any)
+        inspectDependency(args._[1] as any, args['verbose'] as any)
       }
       break
     }
