@@ -1,6 +1,6 @@
 {
   "name": "@himanoa/dependencies-based-clone",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Clone TypeScript file recursively dependencies based ",
   "main": "dist/cli.js",
   "bin": {
