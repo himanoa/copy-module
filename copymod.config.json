@@ -1,6 +1,0 @@
-{
-  "rules": [
-    { "from": "src/index.ts", "to": "module/index.ts" }
-  ],
-  "ignorePatterns": []
-}
