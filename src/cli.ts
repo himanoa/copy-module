@@ -2,6 +2,7 @@ import yargs from "yargs"
 import { hideBin } from 'yargs/helpers'
 import { inspectDependency } from "./inspect-dependency"
 import { replaceFilePathCommand } from "./replace-file-path"
+import { initConfig } from "./init-config"
 
 const args = yargs(hideBin(process.argv))
   .command('inspect', 'Inspect dependency', b => {
@@ -15,12 +16,13 @@ const args = yargs(hideBin(process.argv))
       demandOption: true,
       string: true
     })
+    .option('dry-run', {
+      alias: 'd',
+      type: 'boolean',
+      description: 'Enable dry run mode'
+    })
   })
-  .option('dry-run', {
-    alias: 'd',
-    type: 'boolean',
-    description: 'Enable dry run mode'
-  })
+  .command('initConfig', 'Initialize config')
   .parseSync()
 
 const main = async () => {
@@ -33,8 +35,12 @@ const main = async () => {
     }
     case 'copy-module':{
       if(typeof args._[1] === 'string' && args.dryRun !== undefined) {
-        replaceFilePathCommand(args._[1] as any, args.dryRun)
+        replaceFilePathCommand(args._[1] as any, args['dryRun'] as any)
       }
+      break
+    }
+    case 'initConfig': {
+      initConfig()
       break
     }
   }
