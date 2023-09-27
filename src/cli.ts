@@ -16,6 +16,10 @@ const args = yargs(hideBin(process.argv))
       demandOption: true,
       string: true
     })
+    .option('verbose', {
+      type: 'boolean',
+      description: 'verbose logging'
+    })
     .option('dry-run', {
       alias: 'd',
       type: 'boolean',

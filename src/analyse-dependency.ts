@@ -1,4 +1,4 @@
-import * as ts from "typescript"
+import ts from "typescript"
 import { DependencyLeaf } from "./dependency-leaf"
 import { DependencyTree } from "./dependency-tree"
 

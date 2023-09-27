@@ -4,7 +4,7 @@ import { readFileSync } from "fs"
 import { analyseDependency } from "./analyse-dependency"
 import { printDependencies } from "./printer"
 
-export const inspectDependency = (filePath: string) => {
+export const inspectDependency = (filePath: string, verbose: boolean) => {
   const tsconfigPath = path.join(process.cwd(), 'tsconfig.json')
   const tsconfig = ts.readConfigFile(tsconfigPath, (path) => readFileSync(path, 'utf8'))
 
@@ -21,6 +21,12 @@ export const inspectDependency = (filePath: string) => {
     process.exit(1)
   }
   const dependencyTree = analyseDependency(sourceFile, filePath, program)
+  if(verbose) {
+    console.log("## Source file")
+    console.log(JSON.stringify(program, null, 2))
+    console.log("## Analyse result")
+    console.log(JSON.stringify(dependencyTree, null, 2))
+  }
   for(const deps of dependencyTree) {
     console.log("")
     console.log(`${filePath}`)
