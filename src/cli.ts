@@ -11,7 +11,7 @@ const args = yargs(hideBin(process.argv))
       string: true
     })
   })
-  .command('copy-module', 'Copy module', b => {
+  .command('clone', 'Clone module', b => {
     b.positional('entryPointFilePath', {
       demandOption: true,
       string: true
@@ -33,7 +33,7 @@ const main = async () => {
       }
       break
     }
-    case 'copy-module':{
+    case 'clone':{
       if(typeof args._[1] === 'string' && args.dryRun !== undefined) {
         replaceFilePathCommand(args._[1] as any, args['dryRun'] as any)
       }

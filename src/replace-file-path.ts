@@ -8,7 +8,7 @@ import { analyseDependency } from "./analyse-dependency"
 import { makeIter } from "./dependency-tree"
 
 export const replaceFilePathCommand = (filePath: string, dryRun: boolean) => {
-  const config = JSON.parse(readFileSync(source.join(process.cwd(), "copymod.config.json"), "utf-8")) as Config
+  const config = JSON.parse(readFileSync(source.join(process.cwd(), "dbc.config.json"), "utf-8")) as Config
   const tsconfigPath = source.join(process.cwd(), 'tsconfig.json')
   const tsconfig = ts.readConfigFile(tsconfigPath, (path) => readFileSync(path, 'utf8'))
 

@@ -1,7 +1,7 @@
 {
-  "name": "copy-module",
+  "name": "@himanoa/dependencies-based-clone",
   "version": "1.0.0",
-  "description": "Copy files by recursively traversing the import path",
+  "description": "Clone TypeScript file recursively dependencies based ",
   "main": "dist/cli.js",
   "scripts": {
     "test": "vitest",

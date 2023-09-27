@@ -11,8 +11,8 @@ export const initConfig = () => {
     ignorePatterns: []
   }
 
-  const configDestPath = path.join(process.cwd(), 'copymod.config.json')
+  const configDestPath = path.join(process.cwd(), 'dbc.config.json')
   const body = JSON.stringify(config, null, 2)
   writeFileSync(configDestPath, body)
-  console.log("Created copymod.config.json")
+  console.log("Created dbc.config.json")
 }
