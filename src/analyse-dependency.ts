@@ -66,7 +66,10 @@ export const traverseNode = (filePath: string, program: ts.Program, breadclumb: 
         if(verbose) {
           console.log(`Skip: filename is ${fileName}`)
         }
-        return null
+        return {
+          filePath: modulePath,
+          deps: []
+        }
       }
       const sourceFile = program.getSourceFile(fileName)
       if(sourceFile == null) {
