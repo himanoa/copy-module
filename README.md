@@ -23,6 +23,7 @@ Example:
     "to": "path/to/destination/$1.js"
   }]
 }
+```
 
 4. Execute the clone:
 
