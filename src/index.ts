@@ -16,6 +16,11 @@ const args = yargs(hideBin(process.argv))
       string: true
     })
   })
+  .option('dry-run', {
+    alias: 'd',
+    type: 'boolean',
+    description: 'Enable dry run mode'
+  })
   .parseSync()
 
 const main = async () => {
@@ -27,8 +32,8 @@ const main = async () => {
       break
     }
     case 'copy-module':{
-      if(typeof args._[1] === 'string') {
-        replaceFilePathCommand(args._[1] as any)
+      if(typeof args._[1] === 'string' && args.dryRun !== undefined) {
+        replaceFilePathCommand(args._[1] as any, args.dryRun)
       }
       break
     }

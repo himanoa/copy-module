@@ -7,7 +7,7 @@ import { CopyRule, isMatchPattern, replaceFilePath } from "./copy-rule"
 import { analyseDependency } from "./analyse-dependency"
 import { makeIter } from "./dependency-tree"
 
-export const replaceFilePathCommand = (filePath: string) => {
+export const replaceFilePathCommand = (filePath: string, dryRun: boolean) => {
   const config = JSON.parse(readFileSync(source.join(process.cwd(), "copymod.config.json"), "utf-8")) as Config
   const tsconfigPath = source.join(process.cwd(), 'tsconfig.json')
   const tsconfig = ts.readConfigFile(tsconfigPath, (path) => readFileSync(path, 'utf8'))
@@ -27,18 +27,20 @@ export const replaceFilePathCommand = (filePath: string) => {
   const dependencyTree = analyseDependency(sourceFile, filePath, program)
 
   Promise.all(
-    Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath))
+    Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath, dryRun))
   )
 }
 
-export const copyModuleFromRules = async (rules: ReadonlyArray<CopyRule>, source: string): Promise<void> => {
+export const copyModuleFromRules = async (rules: ReadonlyArray<CopyRule>, source: string, dryRun: boolean): Promise<void> => {
   for(const rule of rules) {
     if(!isMatchPattern(rule.from, source)) {
       continue
     }
 
     const destinationPath = replaceFilePath(rule.from, rule.to, source)
-    await fs.copyFile(source, destinationPath)
+    if(!dryRun) {
+      await fs.copyFile(source, destinationPath)
+    }
     return
   }
   console.error(`${source} is not matched with any rules.`)
