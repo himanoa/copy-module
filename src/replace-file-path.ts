@@ -6,15 +6,16 @@ import { Config } from "./config"
 import { CopyRule, isMatchPattern, replaceFilePath } from "./copy-rule"
 import { analyseDependency } from "./analyse-dependency"
 import { makeIter } from "./dependency-tree"
+import { loadConfig } from 'tsconfig-paths'
 
 export const replaceFilePathCommand = (filePath: string, dryRun: boolean) => {
   const config = JSON.parse(readFileSync(source.join(process.cwd(), "dbc.config.json"), "utf-8")) as Config
   const tsconfigPath = source.join(process.cwd(), 'tsconfig.json')
   const tsconfig = ts.readConfigFile(tsconfigPath, (path) => readFileSync(path, 'utf8'))
 
-  if(tsconfig.error) {
+  const configResult = loadConfig(tsconfigPath)
+  if(tsconfig.error || configResult.resultType === 'failed') {
     console.error("Error reading tsconfig.json")
-    console.error(tsconfig.error.messageText)
     process.exit(1)
   }
 
@@ -24,7 +25,7 @@ export const replaceFilePathCommand = (filePath: string, dryRun: boolean) => {
     console.error("Error reading source file")
     process.exit(1)
   }
-  const dependencyTree = analyseDependency(sourceFile, filePath, program, false)
+  const dependencyTree = analyseDependency(sourceFile, filePath, program, configResult.absoluteBaseUrl, false)
 
   Promise.all(
     Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath, dryRun))

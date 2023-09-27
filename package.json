@@ -1,6 +1,6 @@
 {
   "name": "@himanoa/dependencies-based-clone",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Clone TypeScript file recursively dependencies based ",
   "main": "dist/cli.js",
   "bin": {
@@ -27,6 +27,7 @@
     "vitest": "0.34.5"
   },
   "dependencies": {
+    "tsconfig-paths": "4.2.0",
     "typescript": "^5.2.2",
     "yargs": "^17.7.2"
   }

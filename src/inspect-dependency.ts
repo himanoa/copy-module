@@ -3,14 +3,14 @@ import ts from "typescript"
 import { readFileSync } from "fs"
 import { analyseDependency } from "./analyse-dependency"
 import { printDependencies } from "./printer"
+import { loadConfig } from 'tsconfig-paths'
 
 export const inspectDependency = (filePath: string, verbose: boolean) => {
   const tsconfigPath = path.join(process.cwd(), 'tsconfig.json')
   const tsconfig = ts.readConfigFile(tsconfigPath, (path) => readFileSync(path, 'utf8'))
-
-  if(tsconfig.error) {
+  const configResult = loadConfig(tsconfigPath)
+  if(tsconfig.error || configResult.resultType === 'failed') {
     console.error("Error reading tsconfig.json")
-    console.error(tsconfig.error.messageText)
     process.exit(1)
   }
 
@@ -20,7 +20,7 @@ export const inspectDependency = (filePath: string, verbose: boolean) => {
     console.error("Error reading source file")
     process.exit(1)
   }
-  const dependencyTree = analyseDependency(sourceFile, filePath, program, verbose)
+  const dependencyTree = analyseDependency(sourceFile, filePath, program, configResult.absoluteBaseUrl, verbose)
   if(verbose) {
     console.log("## Source file")
     console.log(JSON.stringify(program, null, 2))
