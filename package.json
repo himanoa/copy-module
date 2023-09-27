@@ -6,7 +6,7 @@
   "scripts": {
     "test": "vitest",
     "start": "ts-node src/cli.ts",
-    "build": "tsc"
+    "build": "tsc src/cli.ts"
   },
   "author": "himanoa <matsunoappy@gmail.com>",
   "license": "MIT",
