@@ -61,11 +61,9 @@ export const traverseNode = (filePath: string, program: ts.Program, breadclumb: 
         return null
       }
       const modulePath = (ms as ts.StringLiteral).text
-      const fileName = ts.resolveModuleName(modulePath, filePath, program.getCompilerOptions(), ts.sys).resolvedModule?.resolvedFileName
+      const resolved = ts.resolveModuleName(modulePath, filePath, program.getCompilerOptions(), ts.sys)
+      const fileName = resolved.resolvedModule?.resolvedFileName
       if(fileName == null || fileName.includes('node_modules')) {
-        if(verbose) {
-          console.log(`Skip: filename is ${fileName}`)
-        }
         return {
           filePath: modulePath,
           deps: []

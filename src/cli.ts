@@ -30,6 +30,9 @@ const args = yargs(hideBin(process.argv))
   .parseSync()
 
 const main = async () => {
+  if(args['verbose']) {
+    console.log(`cwd: ${process.cwd()}`)
+  }
   switch(args._[0]) {
     case 'inspect':{
       if(typeof args._[1] === 'string') {
