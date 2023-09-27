@@ -41,6 +41,9 @@ export const copyModuleFromRules = async (rules: ReadonlyArray<CopyRule>, source
     if(!dryRun) {
       await fs.copyFile(source, destinationPath)
     }
+    if(dryRun) {
+      console.log(`${source} -> ${destinationPath}`)
+    }
     return
   }
   console.error(`${source} is not matched with any rules.`)
