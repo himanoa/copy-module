@@ -63,10 +63,16 @@ export const traverseNode = (filePath: string, program: ts.Program, breadclumb: 
       const modulePath = (ms as ts.StringLiteral).text
       const fileName = ts.resolveModuleName(modulePath, filePath, program.getCompilerOptions(), ts.sys).resolvedModule?.resolvedFileName
       if(fileName == null || fileName.includes('node_modules')) {
+        if(verbose) {
+          console.log(`Skip: filename is ${fileName}`)
+        }
         return null
       }
       const sourceFile = program.getSourceFile(fileName)
       if(sourceFile == null) {
+        if(verbose) {
+          console.log(`Skip: sourceFile is undefined ${fileName}`)
+        }
         return null
       }
 
