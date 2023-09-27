@@ -1,8 +1,11 @@
 {
   "name": "@himanoa/dependencies-based-clone",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Clone TypeScript file recursively dependencies based ",
   "main": "dist/cli.js",
+  "bin": {
+    "dbc": "dist/cli.js"
+  },
   "scripts": {
     "test": "vitest",
     "start": "ts-node src/cli.ts",
