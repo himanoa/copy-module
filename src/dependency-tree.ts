@@ -1,5 +1,4 @@
-import { DependencyLeaf } from "./dependency-leaf";
-import { makeIter as makeLeafIter } from './dependency-leaf'
+import { DependencyLeaf, makeIter as makeLeafIter } from "./dependency-leaf";
 
 export type DependencyTree = DependencyLeaf[][]
 
