@@ -8,7 +8,7 @@ import { analyseDependency } from "./analyse-dependency"
 import { makeIter } from "./dependency-tree"
 import { loadConfig } from 'tsconfig-paths'
 
-export const replaceFilePathCommand = (filePath: string, dryRun: boolean) => {
+export const replaceFilePathCommand = async (filePath: string, dryRun: boolean) => {
   const config = JSON.parse(readFileSync(source.join(process.cwd(), "dbc.config.json"), "utf-8")) as Config
   const tsconfigPath = source.join(process.cwd(), 'tsconfig.json')
   const tsconfig = ts.readConfigFile(tsconfigPath, (path) => readFileSync(path, 'utf8'))
@@ -26,13 +26,23 @@ export const replaceFilePathCommand = (filePath: string, dryRun: boolean) => {
     process.exit(1)
   }
   const dependencyTree = analyseDependency(sourceFile, filePath, program, configResult.absoluteBaseUrl, false)
+  const sourceToDestMap = new Map<string, string>()
 
-  Promise.all(
-    Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath, dryRun))
-  )
+  await Promise.all(
+    Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath, dryRun, sourceToDestMap)))
+
+  if(!dryRun) {
+    const serializableSourceToDestMap = Array.from(sourceToDestMap.entries()).reduce((acc, [key, value]) => {
+      return {
+        ...acc,
+        [key]: value
+      }
+    }, {})
+    await fs.writeFile(source.join(process.cwd(), "dbc.map.json"), JSON.stringify(serializableSourceToDestMap, null, 2))
+  }
 }
 
-export const copyModuleFromRules = async (rules: ReadonlyArray<CopyRule>, source: string, dryRun: boolean): Promise<void> => {
+export const copyModuleFromRules = async (rules: ReadonlyArray<CopyRule>, source: string, dryRun: boolean, sourceToDestMap: Map<string, string>): Promise<void> => {
   for(const rule of rules) {
     if(!isMatchPattern(rule.from, source)) {
       continue
@@ -45,6 +55,7 @@ export const copyModuleFromRules = async (rules: ReadonlyArray<CopyRule>, source
     if(dryRun) {
       console.log(`${source} -> ${destinationPath}`)
     }
+    sourceToDestMap.set(source, destinationPath)
     return
   }
   console.error(`${source} is not matched with any rules.`)
