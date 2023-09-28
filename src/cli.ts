@@ -41,7 +41,7 @@ const main = async () => {
       break
     }
     case 'clone':{
-      if(typeof args._[1] === 'string' && args.dryRun !== undefined) {
+      if(typeof args._[1] === 'string') {
         await replaceFilePathCommand(args._[1] as any, args['dryRun'] as any)
       }
       break
