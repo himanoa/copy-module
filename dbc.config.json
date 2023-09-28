@@ -5,5 +5,9 @@
       "to": "src/$1.js"
     }
   ],
-  "ignorePatterns": []
+  "ignorePatterns": [],
+  "entryPoints": [
+    "src/cli.ts",
+    "sandbox/index.ts"
+  ]
 }

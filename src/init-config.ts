@@ -8,7 +8,8 @@ export const initConfig = () => {
       from: 'src/(.+).ts',
       to: 'src/$1.js'
     }],
-    ignorePatterns: []
+    ignorePatterns: [],
+    entryPoints: []
   }
 
   const configDestPath = path.join(process.cwd(), 'dbc.config.json')

@@ -8,7 +8,7 @@ import { analyseDependency } from "./analyse-dependency"
 import { makeIter } from "./dependency-tree"
 import { loadConfig } from 'tsconfig-paths'
 
-export const replaceFilePathCommand = async (filePath: string, dryRun: boolean) => {
+export const replaceFilePathCommand = async (filePath: string | null, dryRun: boolean) => {
   const config = JSON.parse(readFileSync(source.join(process.cwd(), "dbc.config.json"), "utf-8")) as Config
   const tsconfigPath = source.join(process.cwd(), 'tsconfig.json')
   const tsconfig = ts.readConfigFile(tsconfigPath, (path) => readFileSync(path, 'utf8'))
@@ -19,17 +19,27 @@ export const replaceFilePathCommand = async (filePath: string, dryRun: boolean) 
     process.exit(1)
   }
 
-  const program = ts.createProgram([filePath], tsconfig.config)
-  const sourceFile = program.getSourceFile(filePath)
-  if(sourceFile == null) {
-    console.error("Error reading source file")
-    process.exit(1)
-  }
-  const dependencyTree = analyseDependency(sourceFile, filePath, program, configResult.absoluteBaseUrl, false)
+  const codes = (() => {
+    if(filePath != null) {
+      return [filePath]
+    }
+    return config.entryPoints || []
+  })()
+
+  const program = ts.createProgram(codes, tsconfig.config)
   const sourceToDestMap = new Map<string, string>()
 
-  await Promise.all(
-    Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath, dryRun, sourceToDestMap)))
+  codes.forEach(async (filePath) => {
+    const sourceFile = program.getSourceFile(filePath)
+    if(sourceFile == null) {
+      console.error("Error reading source file")
+      process.exit(1)
+    }
+    const dependencyTree = analyseDependency(sourceFile, filePath, program, configResult.absoluteBaseUrl, false)
+
+    await Promise.all(
+      Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath, dryRun, sourceToDestMap)))
+  })
 
   if(!dryRun) {
     const serializableSourceToDestMap = Array.from(sourceToDestMap.entries()).reduce((acc, [key, value]) => {

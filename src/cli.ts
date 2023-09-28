@@ -7,13 +7,13 @@ import { initConfig } from "./init-config"
 const args = yargs(hideBin(process.argv))
   .command('inspect', 'Inspect dependency', b => {
     b.positional('entryPointFilePath', {
-      demandOption: true,
+      demandOption: false,
       string: true
     })
   })
   .command('clone', 'Clone module', b => {
     b.positional('entryPointFilePath', {
-      demandOption: true,
+      demandOption: false,
       string: true
     })
     .option('verbose', {
@@ -35,15 +35,11 @@ const main = async () => {
   }
   switch(args._[0]) {
     case 'inspect':{
-      if(typeof args._[1] === 'string') {
-        inspectDependency(args._[1] as any, args['verbose'] as any)
-      }
+      inspectDependency(args._[1] as any, args['verbose'] as any)
       break
     }
     case 'clone':{
-      if(typeof args._[1] === 'string') {
-        await replaceFilePathCommand(args._[1] as any, args['dryRun'] as any)
-      }
+      await replaceFilePathCommand(args._[1] as any, args['dryRun'] as any)
       break
     }
     case 'init-config': {
