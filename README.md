@@ -18,7 +18,7 @@ Example:
 
 ```json
 {
-  rules: [{
+  "rules": [{
     "from": "path/to/source/(.*)\.ts",
     "to": "path/to/destination/$1.js"
   }]
