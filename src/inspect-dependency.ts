@@ -40,7 +40,6 @@ export const inspectDependency = (filePath: string | null, verbose: boolean) => 
     }
     for(const deps of dependencyTree) {
       console.log("")
-      console.log(`${filePath}`)
       printDependencies(deps)
     }
   })

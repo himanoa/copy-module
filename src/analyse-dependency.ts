@@ -1,4 +1,4 @@
-import ts, { createProgram } from "typescript"
+import ts  from "typescript"
 import { relative } from 'path'
 import { createMatchPath } from 'tsconfig-paths'
 import { DependencyLeaf } from "./dependency-leaf"
@@ -12,7 +12,10 @@ export const analyseDependency = (
   verbose: boolean
 ): DependencyTree => {
   const results: DependencyTree = []
-  results.push(traverseSourceFile(sourceFile, filePath, program, new Set<string>(), verbose, absoluteBaseUrl))
+    results.push([{
+      filePath: relative(process.cwd(), filePath),
+      deps: traverseSourceFile(sourceFile, filePath, program, new Set<string>(), verbose, absoluteBaseUrl)
+    }])
   return results
 }
 
