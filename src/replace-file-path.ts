@@ -1,7 +1,6 @@
 import ts from "typescript"
-import { readFileSync } from "fs"
+import { copyFileSync, readFileSync, writeFileSync } from "fs"
 import path from "path"
-import fs from 'fs/promises'
 import { mkdirSync } from "fs"
 import { Config } from "./config"
 import { CopyRule, isMatchPattern, replaceFilePath } from "./copy-rule"
@@ -37,10 +36,10 @@ export const replaceFilePathCommand = async (filePath: string | null, dryRun: bo
       process.exit(1)
     }
     const dependencyTree = analyseDependency(sourceFile, filePath, program, configResult.absoluteBaseUrl, false)
-
-    await Promise.all(
-      Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath, dryRun, sourceToDestMap)))
+    Array.from(new Set(Array.from(makeIter(dependencyTree)).map(({ filePath }) => filePath))).map((filePath) => copyModuleFromRules(config.rules, filePath, dryRun, sourceToDestMap))
   })
+
+  console.dir(sourceToDestMap)
 
   if(!dryRun) {
     const serializableSourceToDestMap = Array.from(sourceToDestMap.entries()).reduce((acc, [key, value]) => {
@@ -49,11 +48,11 @@ export const replaceFilePathCommand = async (filePath: string | null, dryRun: bo
         [key]: value
       }
     }, {})
-    await fs.writeFile(path.join(process.cwd(), "dbc.map.json"), JSON.stringify(serializableSourceToDestMap, null, 2))
+    writeFileSync(path.join(process.cwd(), "dbc.map.json"), JSON.stringify(serializableSourceToDestMap, null, 2))
   }
 }
 
-export const copyModuleFromRules = async (rules: ReadonlyArray<CopyRule>, source: string, dryRun: boolean, sourceToDestMap: Map<string, string>): Promise<void> => {
+export const copyModuleFromRules = (rules: ReadonlyArray<CopyRule>, source: string, dryRun: boolean, sourceToDestMap: Map<string, string>) => {
   for(const rule of rules) {
     if(!isMatchPattern(rule.from, source)) {
       continue
@@ -62,7 +61,8 @@ export const copyModuleFromRules = async (rules: ReadonlyArray<CopyRule>, source
     const destinationPath = replaceFilePath(rule.from, rule.to, source)
     if(!dryRun) {
       mkdirSync(path.dirname(destinationPath), { recursive: true })
-      await fs.copyFile(source, destinationPath)
+      copyFileSync(source, destinationPath)
+      console.log(`copied ${source} -> ${destinationPath}`)
     }
     if(dryRun) {
       console.log(`${source} -> ${destinationPath}`)

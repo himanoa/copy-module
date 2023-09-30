@@ -7,7 +7,6 @@
   ],
   "ignorePatterns": [],
   "entryPoints": [
-    "src/cli.ts",
-    "sandbox/index.ts"
+    "src/cli.ts"
   ]
 }

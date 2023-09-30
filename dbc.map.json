@@ -1,0 +1,12 @@
+{
+  "src/dependency-leaf.ts": "src/dependency-leaf.js",
+  "src/dependency-tree.ts": "src/dependency-tree.js",
+  "src/analyse-dependency.ts": "src/analyse-dependency.js",
+  "src/printer.ts": "src/printer.js",
+  "src/copy-rule.ts": "src/copy-rule.js",
+  "src/config.ts": "src/config.js",
+  "src/inspect-dependency.ts": "src/inspect-dependency.js",
+  "src/replace-file-path.ts": "src/replace-file-path.js",
+  "src/init-config.ts": "src/init-config.js",
+  "src/cli.ts": "src/cli.js"
+}
