@@ -61,6 +61,7 @@ const withBreadclumb = (breadclumb: Set<string>, fileName: string, op: (fileName
   }
 }
 
+
 const getModulePath = (absoluteBaseUrl: string,  program: ts.Program, modulePath: string): string => {
   const supportedExtensions = ['.ts', '.tsx']
   const paths = (program.getCompilerOptions() as any).compilerOptions.paths
@@ -75,13 +76,7 @@ const getModulePath = (absoluteBaseUrl: string,  program: ts.Program, modulePath
   return absPath
 }
 
-export const traverseNode = (
-  filePath: string, program: ts.Program, breadclumb: Set<string>, verbose: boolean, absoluteBaseUrl: string) => (node: ts.Node): DependencyLeaf | null=> {
-  switch(node.kind) {
-    case ts.SyntaxKind.ImportDeclaration: {
-      const importDeclaration = node as ts.ImportDeclaration
-      const ms = importDeclaration.moduleSpecifier
-
+export const getDependencyLeaf = (ms: ts.Expression, filePath: string, program: ts.Program, breadclumb: Set<string>, verbose: boolean, absoluteBaseUrl: string): DependencyLeaf | null => {
       if(ms.kind !== ts.SyntaxKind.StringLiteral) {
         return null
       }
@@ -106,6 +101,25 @@ export const traverseNode = (
           deps: traverseSourceFile(sourceFile, fileName, program, breadclumb, verbose, absoluteBaseUrl)
         }
       })
+    }
+
+export const traverseNode = (filePath: string, program: ts.Program, breadclumb: Set<string>, verbose: boolean, absoluteBaseUrl: string) => (node: ts.Node): DependencyLeaf | null=> {
+  switch(node.kind) {
+    case ts.SyntaxKind.ExportDeclaration: {
+      const exportDeclaration = node as ts.ExportDeclaration
+      const ms = exportDeclaration.moduleSpecifier
+
+      if(ms == null) {
+        return null
+      }
+
+      return getDependencyLeaf(ms, filePath, program, breadclumb, verbose, absoluteBaseUrl)
+    }
+    case ts.SyntaxKind.ImportDeclaration: {
+      const importDeclaration = node as ts.ImportDeclaration
+      const ms = importDeclaration.moduleSpecifier
+
+      return getDependencyLeaf(ms, filePath, program, breadclumb, verbose, absoluteBaseUrl)
     }
   }
 
