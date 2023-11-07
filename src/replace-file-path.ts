@@ -1,7 +1,7 @@
 import ts from "typescript"
 import { copyFileSync, readFileSync, writeFileSync } from "fs"
 import path from "path"
-import { mkdirSync } from "fs"
+import { mkdirSync, existsSync } from "fs"
 import { Config } from "./config"
 import { CopyRule, isMatchPattern, replaceFilePath } from "./copy-rule"
 import { analyseDependency } from "./analyse-dependency"
@@ -61,8 +61,10 @@ export const copyModuleFromRules = (rules: ReadonlyArray<CopyRule>, source: stri
     const destinationPath = replaceFilePath(rule.from, rule.to, source)
     if(!dryRun) {
       mkdirSync(path.dirname(destinationPath), { recursive: true })
-      copyFileSync(source, destinationPath)
-      console.log(`copied ${source} -> ${destinationPath}`)
+      if(!existsSync(destinationPath)) {
+        copyFileSync(source, destinationPath)
+        console.log(`copied ${source} -> ${destinationPath}`)
+      }
     }
     if(dryRun) {
       console.log(`${source} -> ${destinationPath}`)
